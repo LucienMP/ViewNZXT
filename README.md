@@ -1,0 +1,2 @@
+# ViewNZXT
+View fullscreen NZXT
