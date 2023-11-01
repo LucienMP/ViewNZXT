@@ -22,10 +22,39 @@ video::-webkit-media-controls-current-time-display {}
 </head>
 
 <body>
+<script  async>
+    function doit() {
+        document.getElementById('container').style.display= 'block' ;
+        document.getElementById('selectblock').style.display= 'none' ;
+        const videoSelect = document.querySelector('select#videoSource');
+        const videoSource = videoSelect.value;
 
-<select id="videoSource">
-</select>
+        if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia(
+			{
+				video: {
+							width: {min:2560},
+							height: {min:1440},
+                            deviceId: videoSource
+						},
+				audio: false
+			}
+		)
+            .then(function (stream) {
+                document.querySelector("#videoElement").srcObject = stream;
+            });
+       }
+    }
+</script>
 
+<div id="selectblock" block>
+<select id="videoSource"></select> <button onclick="doit();" >XX</button>
+</div>
+
+<div id="container" hidden>
+    <video autoplay="true" id="videoElement" controls width="100%">
+    </video>
+</div>
 
 <script  async>
 // https://developer.chrome.com/blog/media-devices/
@@ -61,22 +90,6 @@ function gotDevices(deviceInfos) {
     <xvideo autoplay="true" id="videoElement" controls width="100%">
     </video>
 </div>
-<script>
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia(
-			{
-				video: {
-							width: {min:2560},
-							height: {min:1440}
-						}, 
-				audio: false
-			}
-		)
-            .then(function (stream) {
-                document.querySelector("#videoElement").srcObject = stream;
-            });
-    }
-</script>
 
 <!-- https://stackoverflow.com/questions/14161516/html5-video-completely-hide-controls -->
 <script>
