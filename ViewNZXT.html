@@ -1,0 +1,78 @@
+<html>
+<head>
+
+<!-- https://stackoverflow.com/questions/14161516/html5-video-completely-hide-controls -->
+<style>
+video::-webkit-media-controls {
+  display: none;
+}
+
+/* Could Use thise as well for Individual Controls */
+video::-webkit-media-controls-play-button {}
+
+video::-webkit-media-controls-volume-slider {}
+
+video::-webkit-media-controls-mute-button {}
+
+video::-webkit-media-controls-timeline {}
+
+video::-webkit-media-controls-current-time-display {}
+</style>
+
+</head>
+
+<body>
+
+<!-- https://superuser.com/questions/1744688/how-can-i-view-the-video-coming-in-from-a-capture-card-on-windows-in-full-screen -->
+
+<div id="container">
+    <video autoplay="true" id="videoElement" controls width="100%">
+    </video>
+</div>
+<script>
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia(
+			{
+				video: {
+							width: {min:2560},
+							height: {min:1440}
+						}, 
+				audio: false
+			}
+		)
+            .then(function (stream) {
+                document.querySelector("#videoElement").srcObject = stream;
+            });
+    }
+</script>
+
+<!-- https://stackoverflow.com/questions/14161516/html5-video-completely-hide-controls -->
+<script>
+document.addEventListener("DOMContentLoaded", function() { initialiseMediaPlayer(); }, false);
+
+
+function initialiseMediaPlayer() {
+
+    mediaPlayer = document.querySelector("#videoElement"); // document.getElementById('#videoElement');
+
+    mediaPlayer.controls = false;
+
+    mediaPlayer.addEventListener('volumechange', function(e) { 
+        // Update the button to be mute/unmute
+        if (mediaPlayer.muted) changeButtonType(muteBtn, 'unmute');
+        else changeButtonType(muteBtn, 'mute');
+    }, false);  
+    mediaPlayer.addEventListener('ended', function() { this.pause(); }, false); 
+
+    mediaPlayer.addEventListener('click', function(e) { 
+        // Meow
+        mediaPlayer.requestFullscreen();
+
+    }, false);  
+	
+}
+
+</script>
+
+</body>
+</html>
