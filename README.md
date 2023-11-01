@@ -1,2 +1,3 @@
 # ViewNZXT
-View fullscreen NZXT
+View fullscreen NZXT 4K HDMI Capture card
+
