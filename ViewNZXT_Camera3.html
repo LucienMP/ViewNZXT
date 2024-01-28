@@ -1,0 +1,123 @@
+<html>
+<head>
+
+<!-- https://stackoverflow.com/questions/14161516/html5-video-completely-hide-controls -->
+<style>
+video::-webkit-media-controls {
+  display: none;
+}
+
+/* Could Use thise as well for Individual Controls */
+video::-webkit-media-controls-play-button {}
+
+video::-webkit-media-controls-volume-slider {}
+
+video::-webkit-media-controls-mute-button {}
+
+video::-webkit-media-controls-timeline {}
+
+video::-webkit-media-controls-current-time-display {}
+</style>
+
+</head>
+
+<body>
+<script  async>
+    function doit() {
+        document.getElementById('container').style.display= 'block' ;
+        document.getElementById('selectblock').style.display= 'none' ;
+        const videoSelect = document.querySelector('select#videoSource');
+        const videoSource = videoSelect.value;
+
+        if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia(
+			{
+				video: {
+							width: {min:1920},
+							height: {min:1080},
+                            deviceId: videoSource
+						},
+				audio: false
+			}
+		)
+            .then(function (stream) {
+                document.querySelector("#videoElement").srcObject = stream;
+            });
+       }
+    }
+</script>
+
+<div id="selectblock" block>
+<select id="videoSource"></select> <button onclick="doit();" >View Stream</button>
+</div>
+
+<div id="container" hidden>
+    <video autoplay="true" id="videoElement" controls width="100%">
+    </video>
+</div>
+
+<script  async>
+// https://developer.chrome.com/blog/media-devices/
+const videoSelect = document.querySelector('select#videoSource');
+
+navigator.mediaDevices.enumerateDevices()
+    .then(gotDevices);
+//    .catch(errorCallback);
+
+function gotDevices(deviceInfos) {
+
+
+    for (var i = 0; i !== deviceInfos.length; ++i) {
+    var deviceInfo = deviceInfos[i];
+    var option = document.createElement('option');
+    option.value = deviceInfo.deviceId;
+    if (deviceInfo.kind === 'videoinput') {
+        option.text = deviceInfo.label || 'Camera ' +
+        (videoSelect.length + 1);
+        videoSelect.appendChild(option);
+    }
+}
+	
+
+}
+
+</script>
+
+
+<!-- https://superuser.com/questions/1744688/how-can-i-view-the-video-coming-in-from-a-capture-card-on-windows-in-full-screen -->
+
+<div id="container">
+    <xvideo autoplay="true" id="videoElement" controls width="100%">
+    </video>
+</div>
+
+<!-- https://stackoverflow.com/questions/14161516/html5-video-completely-hide-controls -->
+<script>
+document.addEventListener("DOMContentLoaded", function() { initialiseMediaPlayer(); }, false);
+
+
+function initialiseMediaPlayer() {
+
+    mediaPlayer = document.querySelector("#videoElement"); // document.getElementById('#videoElement');
+
+    mediaPlayer.controls = false;
+
+    mediaPlayer.addEventListener('volumechange', function(e) { 
+        // Update the button to be mute/unmute
+        if (mediaPlayer.muted) changeButtonType(muteBtn, 'unmute');
+        else changeButtonType(muteBtn, 'mute');
+    }, false);  
+    mediaPlayer.addEventListener('ended', function() { this.pause(); }, false); 
+
+    mediaPlayer.addEventListener('click', function(e) { 
+        // Meow
+        mediaPlayer.requestFullscreen();
+
+    }, false);  
+	
+}
+
+</script>
+
+</body>
+</html>
